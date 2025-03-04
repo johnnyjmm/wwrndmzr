@@ -64,20 +64,28 @@ function assignRoles() {
 
   const totalPlayers = players.length;
 
-  // Determine the number of werewolves based on player count
-  let werewolfCount = 1; // Default for 6 or fewer players
-  if (totalPlayers > 6 && totalPlayers <= 12) {
-    werewolfCount = 2; // 7-12 players (max 2 werewolves)
-  } else if (totalPlayers > 12) {
-    werewolfCount = 3; // 13-20 players (max 3 werewolves)
+  // Determine the number of roles based on player count
+  let werewolfCount = 1;
+  let seerCount = Math.floor(Math.random() * 2); // 0-1 by default
+  let doctorCount = Math.floor(Math.random() * 2); // 0-1 by default
+
+  if (totalPlayers >= 7 && totalPlayers <= 12) {
+    werewolfCount = 2;
+    seerCount = Math.floor(Math.random() * 3); // 0-2 seers
+    doctorCount = Math.floor(Math.random() * 2); // 0-1 doctor
+  } else if (totalPlayers >= 13 && totalPlayers <= 20) {
+    werewolfCount = 3;
+    seerCount = Math.floor(Math.random() * 3); // 0-2 seers
+    doctorCount = Math.floor(Math.random() * 3); // 0-2 doctors
   }
 
-  // Define core roles (Werewolves + Seer + Doctor)
-  const roles = Array(werewolfCount).fill("Werewolf").concat(["Seer", "Doctor"]);
+  // Create roles array
+  const roles = Array(werewolfCount).fill("Werewolf")
+    .concat(Array(seerCount).fill("Seer"))
+    .concat(Array(doctorCount).fill("Doctor"));
 
-  // Dynamically add villagers to fill the remaining slots
-  const villagerCount = totalPlayers - roles.length;
-  for (let i = 0; i < villagerCount; i++) {
+  // Add villagers to fill remaining slots
+  while (roles.length < totalPlayers) {
     roles.push("Villager");
   }
 
