@@ -51,7 +51,7 @@
 function assignRoles() {
   const moderator = document.getElementById('moderator').value.trim();
   const players = document.getElementById('players').value.trim().split('\n').map(name => name.trim()).filter(Boolean);
-  
+
   if (!moderator) {
     alert("Please enter the moderator's name!");
     return;
@@ -65,11 +65,11 @@ function assignRoles() {
   const totalPlayers = players.length;
 
   // Determine the number of werewolves based on player count
-  let werewolfCount = 2; // Default for 8 or fewer players
-  if (totalPlayers > 8 && totalPlayers <= 16) {
-    werewolfCount = 3; // 9-16 players
-  } else if (totalPlayers > 16) {
-    werewolfCount = 4; // 17-20 players
+  let werewolfCount = 1; // Default for 6 or fewer players
+  if (totalPlayers > 6 && totalPlayers <= 12) {
+    werewolfCount = 2; // 7-12 players (max 2 werewolves)
+  } else if (totalPlayers > 12) {
+    werewolfCount = 3; // 13-20 players (max 3 werewolves)
   }
 
   // Define core roles (Werewolves + Seer + Doctor)
@@ -103,4 +103,5 @@ function assignRoles() {
 </script>
 
 </body>
+
 </html>
