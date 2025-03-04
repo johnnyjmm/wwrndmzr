@@ -1,18 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Name Picker</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <h1>Random Name Picker</h1>
-    <textarea id="nameInput" placeholder="Enter names here, separated by commas"></textarea>
-    <button onclick="pickRandomName()">Pick Random Name</button>
-    <h2>Random Winner:</h2>
-    <p id="randomWinner">...</p>
 
-    <script src="script.js"></script>
+<head>
+  <title>Werewolf Role Assigner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      color: #444;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #output {
+      white-space: pre-wrap;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Werewolf Role Assigner</h1>
+
+<label for="players">Enter player names (one per line):</label><br>
+<textarea id="players" placeholder="Alice&#10;Bob&#10;Charlie"></textarea>
+
+<button onclick="assignRoles()">Assign Roles</button>
+
+<h2>Results (Copy & DM on Slack):</h2>
+<div id="output"></div>
+
+<script>
+function assignRoles() {
+  const players = document.getElementById('players').value.trim().split('\n').map(name => name.trim()).filter(Boolean);
+  
+  if (players.length < 4) {
+    alert("You need at least 4 players to play Werewolf!");
+    return;
+  }
+
+  const totalPlayers = players.length;
+
+  // Define core roles
+  const roles = ["Werewolf", "Werewolf", "Seer", "Doctor"];
+  
+  // Dynamically add villagers to fill the remaining slots
+  const villagerCount = totalPlayers - roles.length;
+  for (let i = 0; i < villagerCount; i++) {
+    roles.push("Villager");
+  }
+
+  // Shuffle roles using Fisher-Yates algorithm
+  for (let i = roles.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [roles[i], roles[j]] = [roles[j], roles[i]];
+  }
+
+  // Shuffle players for random assignment
+  for (let i = players.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [players[i], players[j]] = [players[j], players[i]];
+  }
+
+  // Generate output for Slack DMs
+  const output = players.map((player, index) => 
+    `Hey ${player}, your role is: *${roles[index]}* 🤫`).join('\n\n');
+
+  document.getElementById('output').textContent = output;
+}
+</script>
+
 </body>
 </html>
