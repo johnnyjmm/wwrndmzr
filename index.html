@@ -13,9 +13,8 @@
     h1 {
       color: #444;
     }
-    textarea {
+    textarea, input {
       width: 100%;
-      height: 150px;
       margin-bottom: 20px;
     }
     button {
@@ -37,6 +36,9 @@
 
 <h1>Werewolf Role Assigner</h1>
 
+<label for="moderator">Enter Moderator's Name:</label><br>
+<input type="text" id="moderator" placeholder="Moderator Name">
+
 <label for="players">Enter player names (one per line):</label><br>
 <textarea id="players" placeholder="Alice&#10;Bob&#10;Charlie"></textarea>
 
@@ -47,10 +49,16 @@
 
 <script>
 function assignRoles() {
+  const moderator = document.getElementById('moderator').value.trim();
   const players = document.getElementById('players').value.trim().split('\n').map(name => name.trim()).filter(Boolean);
   
+  if (!moderator) {
+    alert("Please enter the moderator's name!");
+    return;
+  }
+
   if (players.length < 4) {
-    alert("You need at least 4 players to play Werewolf!");
+    alert("You need at least 4 players (excluding the moderator) to play Werewolf!");
     return;
   }
 
@@ -64,9 +72,9 @@ function assignRoles() {
     werewolfCount = 4; // 17-20 players
   }
 
-  // Define core roles (werewolves + seer + doctor)
+  // Define core roles (Werewolves + Seer + Doctor)
   const roles = Array(werewolfCount).fill("Werewolf").concat(["Seer", "Doctor"]);
-  
+
   // Dynamically add villagers to fill the remaining slots
   const villagerCount = totalPlayers - roles.length;
   for (let i = 0; i < villagerCount; i++) {
@@ -86,7 +94,8 @@ function assignRoles() {
   }
 
   // Generate output for Slack DMs
-  const output = players.map((player, index) => 
+  let output = `🎤 *Moderator:* ${moderator}\n\n`;
+  output += players.map((player, index) => 
     `Hey ${player}, your role is: *${roles[index]}* 🤫`).join('\n\n');
 
   document.getElementById('output').textContent = output;
