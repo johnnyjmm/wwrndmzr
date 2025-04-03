@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Werewolf Role Assigner</title>
+    <title>Werewolf Role Assigner & Timer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,28 +34,55 @@
             padding: 10px;
             background: #fff;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
     </style>
 </head>
 
 <body>
 
-    <h1>Werewolf Role Assigner</h1>
+    <h1>Werewolf Role Assigner & Timer</h1>
 
-    <label for="moderator">Enter Moderator's Name:</label><br>
-    <input type="text" id="moderator" placeholder="Moderator Name">
+    <table>
+        <tr>
+            <td>
+                <label for="moderator">Enter Moderator's Name:</label><br>
+                <input type="text" id="moderator" placeholder="Moderator Name">
 
-    <label for="players">Enter player names (one per line):</label><br>
-    <textarea id="players" placeholder="Alice&#10;Bob&#10;Charlie"></textarea>
+                <label for="players">Enter player names (one per line):</label><br>
+                <textarea id="players" placeholder="Alice&#10;Bob&#10;Charlie"></textarea>
 
-    <button onclick="assignRoles()">Assign Roles</button>
-    <button onclick="clearInputs()">Clear</button>
+                <button onclick="assignRoles()">Assign Roles</button>
+                <button onclick="clearInputs()">Clear</button>
 
-    <h2>Results (Copy & DM on Slack):</h2>
-    <div id="output"></div>
-    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+                <h2>Results (Copy & DM on Slack):</h2>
+                <div id="output"></div>
+                <button onclick="copyToClipboard()">Copy to Clipboard</button>
+            </td>
+            <td>
+                <h2>Night Time Timer</h2>
+                <label for="timerInput">Enter Time (seconds):</label><br>
+                <input type="number" id="timerInput" placeholder="60">
+                <button onclick="startTimer()">Start Timer</button>
+                <div id="timerDisplay"></div>
+            </td>
+        </tr>
+    </table>
 
     <script>
         function assignRoles() {
+            // ... (Role assignment logic from previous response) ...
             const moderator = document.getElementById('moderator').value.trim();
             const players = document.getElementById('players').value.trim().split('\n').map(name => name.trim()).filter(Boolean);
 
@@ -124,6 +151,7 @@
         }
 
         function copyToClipboard() {
+            // ... (Copy to clipboard logic) ...
             const outputElement = document.getElementById('output');
             const textToCopy = outputElement.textContent;
 
@@ -136,11 +164,33 @@
         }
 
         function clearInputs() {
+            // ... (Clear inputs logic) ...
             document.getElementById('moderator').value = '';
             document.getElementById('players').value = '';
             document.getElementById('output').textContent = '';
         }
 
+        function startTimer() {
+            let seconds = parseInt(document.getElementById('timerInput').value);
+            if (isNaN(seconds) || seconds <= 0) {
+                alert("Please enter a valid number of seconds.");
+                return;
+            }
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.textContent = seconds;
+
+            const timer = setInterval(() => {
+                seconds--;
+                timerDisplay.textContent = seconds;
+
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    alert("Night time is over!");
+                    timerDisplay.textContent = "Time's up!";
+                }
+            }, 1000);
+        }
     </script>
 
 </body>
